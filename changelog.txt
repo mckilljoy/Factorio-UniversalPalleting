@@ -1,5 +1,44 @@
 0.16.2 -- Reduced pallet (un)load time to 1 second; fixed bug with Bob's ores.
 0.16.2 -- Added "pallets of pallets"; changed empty pallet stack size (10); reduced pallet (un)load time to 6 seconds; fixed more localization descriptions.
-0.16.1 -- Added "palletize everything" option for mod support; added"mini-icons" on pallets; fixed localized descriptions.
-0.16.0 -- Factorio v0.16 support; bug fixes; tweaked the pallet tint colors.
-0.15.0 -- Initial release with vanilla support.
+
+---------------------------------------------------------------------------------------------------
+Version: 0.16.3
+Date: 23. 01. 2018
+  General:
+    - Reduced pallet (un)load time to 1 second
+    - Fixed bug where items with stack sizes < 100 would loose items during pallet unload
+    - Migrated to github
+  Mod Support:
+    - Fixed bug with Bob's ores
+---------------------------------------------------------------------------------------------------
+Version: 0.16.2
+Date: 12. 01. 2018
+  General:
+    - Added "pallets of pallets"
+    - Changed empty-pallet stack size to 10
+    - Changed (un)load time to 6 seconds
+    - Fixed more localization descriptions
+  Mod Support:
+    - Added Bob's Ores support
+---------------------------------------------------------------------------------------------------
+Version: 0.16.1
+Date: 8. 01. 2018
+  General:
+    - Added "mini icons" on pallets as an alternative to pallet tints
+    - Fixed localized descriptions
+  Mod support:
+    - Added support for mods via "palletize everything" option in settings
+---------------------------------------------------------------------------------------------------
+Version: 0.16.0
+Date: 7. 01. 2018
+  General:
+    - Added Factorio v0.16.x support
+    - Improved pallet tint colors
+    - Bug fixes
+---------------------------------------------------------------------------------------------------
+Version: 0.15.0
+Date: 6. 01. 2018
+  General:
+    - Initial release
+    - Added empty-pallet
+    - Added pallets for vanilla intermediate products

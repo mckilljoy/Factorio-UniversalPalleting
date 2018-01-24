@@ -71,10 +71,16 @@ function PalletItem(name, icons, subgroup, order, localized_name)
   data:extend({pallet_item_proto})
 end
 
-function PalletLoad(name, icons, subgroup, order, localized_name)
+function PalletLoad(name, icons, subgroup, order, localized_name, stack_size)
   
   if name ~= "empty-pallet" then
     pallet_ingredient = {type = "item", name = "empty-pallet", amount = 1}
+  end
+  
+  -- Adjust ingredients for very low density items
+  local pallet_ingredient_count = 100
+  if stack_size <= 10 then
+    pallet_ingredient_count = 10
   end
   
   local load_pallet_recipe_proto =
@@ -93,7 +99,7 @@ function PalletLoad(name, icons, subgroup, order, localized_name)
     ingredients =
     {
       pallet_ingredient,
-      {type = "item", name = name, amount = 100}
+      {type = "item", name = name, amount = pallet_ingredient_count}
     },
     results =
     {
@@ -113,12 +119,34 @@ function PalletLoad(name, icons, subgroup, order, localized_name)
   data:extend({load_pallet_recipe_proto})
 end
 
-function PalletUnload(name, icons, subgroup, order, localized_name)
+function PalletUnload(name, icons, subgroup, order, localized_name, stack_size)
   
   if name ~= "empty-pallet" then
     pallet_ingredient = {type = "item", name = "empty-pallet", amount = 1}
   end
 
+  local result_stack_size = 100
+  if stack_size <= 10 then
+    result_stack_size = 10
+  end
+  
+  results = {pallet_ingredient}
+  if stack_size < result_stack_size then
+    local stack_remaining = stack_size
+    local stack_count = result_stack_size / stack_size
+	
+	for i=1,stack_count,1 do
+	  table.insert(results, {type = "item", name = name, amount = stack_size} )
+	  stack_remaining = stack_remaining - result_stack_size
+	end
+    if stack_remaining > 0 then
+	  table.insert(results, {type = "item", name = name, amount = stack_remaining} )
+	end
+	  
+  else
+    table.insert(results, {type = "item", name = name, amount = result_stack_size} )
+  end
+  
   local unload_pallet_recipe_proto =
   {
     type = "recipe",
@@ -136,11 +164,7 @@ function PalletUnload(name, icons, subgroup, order, localized_name)
     {
       {type = "item", name = "pallet-" .. name, amount = 1}
     },
-    results =
-    {
-      pallet_ingredient,
-      {type = "item", name = name, amount = 100},
-    },
+    results = results,
     localised_name =
     {
       "recipe-name.unload-pallet",
@@ -155,7 +179,7 @@ function PalletUnload(name, icons, subgroup, order, localized_name)
   data:extend({unload_pallet_recipe_proto})
 end
 
-function PalletizeItem(name, icon, subgroup, order, localized_name)
+function PalletizeItem(name, icon, subgroup, order, localized_name, stack_size)
 
   -- don't palletize pallets or barrels; this will still let empty pallets pass
   if (string.find(name, "pallet") or string.find(name, "barrel")) then
@@ -210,7 +234,8 @@ function PalletizeItem(name, icon, subgroup, order, localized_name)
     },
 	"load-pallet-" .. subgroup,
 	order,
-	localized_name  
+	localized_name,
+	stack_size
   )
   
   PalletUnload(
@@ -234,7 +259,8 @@ function PalletizeItem(name, icon, subgroup, order, localized_name)
     },
 	"unload-pallet-" .. subgroup,
 	order,
-	localized_name  
+	localized_name,
+	stack_size
   )
 
 end
@@ -253,7 +279,8 @@ PalletItem(
   {{icon = "__UniversalPalleting__/graphics/icons/empty-pallet-pallet.png"}},
   "pallet",
   "a[empty-pallet]-a[load-pallet]",
-  "item-name.empty-pallet"
+  "item-name.empty-pallet",
+  10
  )
  
  PalletUnload(
@@ -276,7 +303,8 @@ PalletItem(
   },
   "pallet",
   "a[empty-pallet]-a[unload-pallet]",
-  "item-name.empty-pallet"
+  "item-name.empty-pallet",
+  10
  )
 
 if palletize_all_items == true then
@@ -300,7 +328,7 @@ if palletize_all_items == true then
 	    localized_name = "equipment-name." .. item.name
       end
 	  
-	  PalletizeItem(item.name, item.icon, "intermediate-product", item.order, localized_name)
+	  PalletizeItem(item.name, item.icon, "intermediate-product", item.order, localized_name, item.stack_size)
 	end
   end
   
@@ -315,9 +343,9 @@ else
       local subgroup = data.raw.item["solid-fuel"].subgroup
       local order = data.raw.item["solid-fuel"].order .. "-a[stone-brick]"
 
-      PalletizeItem(item.name, item.icon, subgroup, order, "item-name." .. item.name)
+      PalletizeItem(item.name, item.icon, subgroup, order, "item-name." .. item.name, item.stack_size)
     else
-      PalletizeItem(item.name, item.icon, item.subgroup, item.order, "item-name." .. item.name)
+      PalletizeItem(item.name, item.icon, item.subgroup, item.order, "item-name." .. item.name, item.stack_size)
     end
   end
 end
