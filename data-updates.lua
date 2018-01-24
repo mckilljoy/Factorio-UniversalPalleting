@@ -6,6 +6,11 @@ require("prototypes.technologies")
 
 local palletize_all_items = settings.startup["palletize-all-items"].value
 
+-- This is a common issue for people, just turn it on for them automatically
+if mods.bobelectronics then
+  palletize_all_items = true
+end
+
 local custom_tints = 
 {
 -- raw-resources
