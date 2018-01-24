@@ -6,7 +6,8 @@ Date: 23. 01. 2018
     - Fixed bug where items with stack sizes < 100 would loose items during pallet unload
     - Migrated to github
   Mod Support:
-    - Fixed bug with Bob's ores
+    - Fixed bug with Bob's ores crashing
+    - Fixed bug with Bob's electronics not being craftable in assembling machines
 ---------------------------------------------------------------------------------------------------
 Version: 0.16.2
 Date: 12. 01. 2018
